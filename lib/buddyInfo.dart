@@ -140,41 +140,6 @@ class _buddyInfoPageState extends State<BuddyInfoPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     const SizedBox(height: 20),
-                    /*Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: TextField(
-                      onChanged: (value) => global.passkey = value,
-                      style: const TextStyle(color: Colors.transparent),
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                          BorderSide(color: Colors.grey, width: 1.0),
-                        ),
-                        fillColor: Colors.white,
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.redAccent, width: 2.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                          BorderSide(color: Colors.white, width: 1.0),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                        ),
-                        hintText: 'Enter Passkey',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: null,
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.normal,
-                        ),
-                      ),
-                    ),
-                  ),*/
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
                       child: TextField(
@@ -232,7 +197,7 @@ class _buddyInfoPageState extends State<BuddyInfoPage> {
     );
   }
   Future<void> _setSharedPref() async {
-    final prefs = await SharedPreferences.getInstance();                           //Here
+    final prefs = await SharedPreferences.getInstance();
     await prefs.setString('USN', global.USN);
 
   }

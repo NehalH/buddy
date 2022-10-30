@@ -143,6 +143,9 @@ class _MyHomePageState extends State<MyHomePage> {
       global.count[8]= (prefs.getInt('ele8')) ?? 0;
       global.count[9]= (prefs.getInt('ele9')) ?? 0;
 
+      global.subs= (prefs.getStringList('subs')) ?? ['-','-','-','-','-','-','-','-','-','-'];
+
+      global.dates= (prefs.getStringList('dates') as List<List<String>>) ?? [['-']];
     });
   }
 
