@@ -1,115 +1,277 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firebase_options.dart';
+import 'globals.dart' as global;
 
-void main() {
-  runApp(const MyApp());
-}
+Future<void> main() async {
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "Organizer@AEROPHILIA22",
+      initialRoute: '/',
+      routes: {
+        //'/': (context) => const Splash_screen(),
+        '/home': (context) => const MyHomePage(),
+      },
+    ),
+  );
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    _getVarSharedPref();
+    super.initState();
+  }
+
+  int _selectedIndex = 0;
+  bool authenticated = false;
+
+  List<Widget> pageList = [
+    const ChallengerInfoPage(),
+    const ContactPage(),
+    const EventListPage(),
+    const ScanQrPage(),
+  ];
+
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      backgroundColor: Colors.black,
+
+      //////////////////////////////////////////////////////////////////////////  Floating Button
+
+      floatingActionButton: InkWell(
+        splashColor: Colors.white,
+        onLongPress: () {
+          _authDialog(context);
+        },
+        child: FloatingActionButton(
+          backgroundColor: Colors.black,
+          child: _getAuthIcon(),
+          onPressed: (){},
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+
+      //////////////////////////////////////////////////////////////////////////  Bottom Navigation Bar
+
+      bottomNavigationBar: FlashyTabBar(
+        backgroundColor: Colors.black,
+        iconSize: 18,
+        animationCurve: Curves.linear,
+        selectedIndex: _selectedIndex,
+        showElevation: true,
+        onItemSelected: (index) => setState(() {
+          _selectedIndex = index;
+        }),
+        items: [
+          FlashyTabBarItem(
+            icon: const Icon(Icons.account_box),
+            title: const Text('Challenger'),
+            activeColor: Colors.white,
+            inactiveColor: Colors.white,
+          ),
+          FlashyTabBarItem(
+            icon: const Icon(Icons.phone),
+            title: const Text('Contact'),
+            activeColor: Colors.white,
+            inactiveColor: Colors.white,
+          ),
+          FlashyTabBarItem(
+            icon: const Icon(Icons.dashboard_rounded),
+            title: const Text('Events'),
+            activeColor: Colors.white,
+            inactiveColor: Colors.white,
+          ),
+          FlashyTabBarItem(
+            icon: const Icon(Icons.badge),
+            title: const Text('Quick Scan'),
+            activeColor: Colors.white,
+            inactiveColor: Colors.white,
+          ),
+        ],
+      ),
+
+      //////////////////////////////////////////////////////////////////////////    Body
+
+      body: pageList.elementAt(_selectedIndex),
     );
+  }
+
+  //////////////////////////////////////////////////////////////////////////////   Authentication Dialogue
+
+  void _authDialog(context) {
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (BuildContext context) {
+          return SafeArea(
+              child: Wrap(
+                children: <Widget>[
+                  Dialog(
+                      backgroundColor: Colors.black54,
+                      elevation: 0,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                            child: TextField(
+                              //controller: _textInputController,
+                              onChanged: (value) => global.passkey = value,
+                              style: const TextStyle(color: Colors.transparent),
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: Colors.grey, width: 1.0),
+                                ),
+                                fillColor: Colors.white,
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.redAccent, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: Colors.white, width: 1.0),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                hintText: 'Enter Passkey',
+                                hintStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: null,
+                                  fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                            child: TextField(
+                              onChanged: (value) => global.signature = value,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: Colors.grey, width: 1.0),
+                                ),
+                                fillColor: Colors.white,
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.redAccent, width: 2.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: Colors.white, width: 1.0),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                hintText: 'Signature',
+                                hintStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: null,
+                                  fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                            child: MaterialButton(
+                              onPressed: () {
+                                checkPassKey();
+                              },
+                              color: Colors.redAccent.shade400,
+                              child: const Text(
+                                "Validate",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                ],
+              ));
+        });
+  }
+
+  //////////////////////////////////////////////////////////////////////////////   Auth functions
+
+  Future<void> _setPassKEYSharedPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    // It doesn't make much sense imho, better use a boolean
+    await prefs.setString('passKEY', 'nehal');                                   //Here
+    await prefs.setString('signature', global.signature);
+  }
+
+  Future<void> _getVarSharedPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedPasskey = prefs.getString('passKEY') ?? 'Not_yet_authorised';
+    global.signature = prefs.getString('signature')!;
+    setState(() {
+      authenticated = storedPasskey == 'nehal';
+      if(authenticated){
+
+        global.userKundali =
+            FirebaseFirestore
+                .instance
+                .collection('participants');
+
+      }
+    });
+  }
+
+  void checkPassKey() {
+    final String enteredPassKey = global.passkey;
+    if (enteredPassKey == 'nehal') {                                             //And Here
+      setState(() {
+        authenticated = true;
+        super.setState(() {});
+      });
+      _setPassKEYSharedPref();
+    } /*else {
+      setState((){
+        global.signature = 'UNAUTHORISED!';
+      });
+    }*/
+  }
+
+  Icon _getAuthIcon() {
+    return authenticated
+        ? const Icon(Icons.check_circle_sharp, color: Colors.greenAccent)
+        : const Icon(Icons.lock, color: Colors.redAccent);
   }
 }
