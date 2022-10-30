@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:buddy/globals.dart' as global;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BuddyInfoPage extends StatefulWidget {
   const BuddyInfoPage({Key? key}) : super(key: key);
@@ -213,6 +214,7 @@ class _buddyInfoPageState extends State<BuddyInfoPage> {
                           setState((){
                             global.USN;
                           });
+                          _setSharedPref();
                           Navigator.pop(context);
                         },
                         color: Colors.redAccent.shade400,
@@ -227,8 +229,12 @@ class _buddyInfoPageState extends State<BuddyInfoPage> {
               )
           );
         }
-    )
-    ;
+    );
+  }
+  Future<void> _setSharedPref() async {
+    final prefs = await SharedPreferences.getInstance();                           //Here
+    await prefs.setString('USN', global.USN);
+
   }
 
 }

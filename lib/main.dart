@@ -1,3 +1,4 @@
+import 'package:buddy/attendance.dart';
 import 'package:buddy/buddyInfo.dart';
 import 'package:buddy/timeTable.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -38,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    _getVarSharedPref();
+    _getSharedPref();
     super.initState();
   }
 
@@ -48,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> pageList = [
     const BuddyInfoPage(),
     const TimeTablePage(),
-    const BuddyInfoPage(),
+    const AttendancePage(),
     const BuddyInfoPage(),
   ];
 
@@ -112,20 +113,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //////////////////////////////////////////////////////////////////////////////   Auth functions
 
-  Future<void> _setPassKEYSharedPref() async {
-    final prefs = await SharedPreferences.getInstance();
-    // It doesn't make much sense imho, better use a boolean
-    await prefs.setString('passKEY', 'nehal');                                   //Here
-    await prefs.setString('signature', global.USN);
+  Future<void> _setSharedPref() async {
+    final prefs = await SharedPreferences.getInstance();                           //Here
+    await prefs.setString('USN', global.USN);
+
   }
 
-  Future<void> _getVarSharedPref() async {
+  Future<void> _getSharedPref() async {
     final prefs = await SharedPreferences.getInstance();
-    final storedPasskey = prefs.getString('passKEY') ?? 'Not_yet_authorised';
-    global.USN = prefs.getString('signature')!;
     setState(() {
-      authenticated = storedPasskey == 'nehal';
-/*      if(authenticated){
+      /*authenticated = storedPasskey == 'nehal';
+      if(authenticated){
 
         global.userKundali =
             FirebaseFirestore
@@ -133,6 +131,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 .collection('participants');
 
       }*/
+      global.USN = prefs.getString('USN') ?? 'Unknown';
+      global.count[0]= (prefs.getInt('ele0')) ?? 0;
+      global.count[1]= (prefs.getInt('ele1')) ?? 0;
+      global.count[2]= (prefs.getInt('ele2')) ?? 0;
+      global.count[3]= (prefs.getInt('ele3')) ?? 0;
+      global.count[4]= (prefs.getInt('ele4')) ?? 0;
+      global.count[5]= (prefs.getInt('ele5')) ?? 0;
+      global.count[6]= (prefs.getInt('ele6')) ?? 0;
+      global.count[7]= (prefs.getInt('ele7')) ?? 0;
+      global.count[8]= (prefs.getInt('ele8')) ?? 0;
+      global.count[9]= (prefs.getInt('ele9')) ?? 0;
+
     });
   }
 
