@@ -77,7 +77,7 @@ class _buddyInfoPageState extends State<BuddyInfoPage> {
         child: Padding(
           padding: const EdgeInsets.all(40.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 10,),
               Container(
@@ -95,22 +95,19 @@ class _buddyInfoPageState extends State<BuddyInfoPage> {
                       const Center(
                           child: Icon(Icons.person_pin, color: Colors.white, size: 160,)
                       ),
-                      const SizedBox(height: 140,),
+                      const SizedBox(height: 20,),
                       Center(
-                        child: Text(global.USN, style: TextStyle(color:global.white, fontFamily: 'Urbanist', fontWeight: FontWeight.w700,fontSize: 26,),),
+                        child: Text("USN: ${global.USN}", style: TextStyle(color:global.white, fontFamily: 'Urbanist', fontWeight: FontWeight.w700,fontSize: 24,),),
+                      ),
+                      const SizedBox(height: 10,),
+                      Center(
+                        child: Text("Name: ${global.name}", style: TextStyle(color:global.white, fontFamily: 'Urbanist', fontWeight: FontWeight.w700,fontSize: 24,),),
                       ),
                       const SizedBox(
                         height: 60.0,
                       ),
                       const SizedBox(
-                        height: 60.0,
-                      ),
-                      Column(
-                        children: const [
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                        ],
+                        height: 20.0,
                       ),
                     ],
                   ),
@@ -142,32 +139,64 @@ class _buddyInfoPageState extends State<BuddyInfoPage> {
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-                      child: TextField(
-                        onChanged: (value) => global.USN = value,
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            BorderSide(color: Colors.grey, width: 1.0),
-                          ),
-                          fillColor: Colors.white,
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.redAccent, width: 2.0),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white,
+                      child: Column(
+                        children: [
+                          TextField(
+                            onChanged: (value) => global.USN = value,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey, width: 1.0),
+                              ),
+                              fillColor: Colors.white,
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.redAccent, width: 2.0),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              hintText: 'USN',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: null,
+                                fontWeight: FontWeight.w400,
+                                fontStyle: FontStyle.normal,
+                              ),
                             ),
                           ),
-                          hintText: 'USN',
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: null,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
+                          SizedBox(height: 5,),
+                          TextField(
+                            onChanged: (value) => global.name = value,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.grey, width: 1.0),
+                              ),
+                              fillColor: Colors.white,
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.redAccent, width: 2.0),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              hintText: 'Name',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: null,
+                                fontWeight: FontWeight.w400,
+                                fontStyle: FontStyle.normal,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -199,6 +228,8 @@ class _buddyInfoPageState extends State<BuddyInfoPage> {
   Future<void> _setSharedPref() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('USN', global.USN);
+    await prefs.setString('name', global.name);
+
 
   }
 

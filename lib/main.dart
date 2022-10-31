@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const BuddyInfoPage(),
     const TimeTablePage(),
     const AttendancePage(),
-    const BuddyInfoPage(),
+    const AttendancePage(),
   ];
 
 
@@ -84,19 +84,19 @@ class _MyHomePageState extends State<MyHomePage> {
             inactiveColor: Colors.blue,
           ),
           FlashyTabBarItem(
-            icon: const Icon(Icons.phone),
+            icon: const Icon(Icons.calendar_month),
             title: const Text('Time Table'),
             activeColor: Colors.green,
             inactiveColor: Colors.blue,
           ),
           FlashyTabBarItem(
-            icon: const Icon(Icons.dashboard_rounded),
+            icon: const Icon(Icons.badge_rounded),
             title: const Text('Attendance'),
             activeColor: Colors.green,
             inactiveColor: Colors.blue,
           ),
           FlashyTabBarItem(
-            icon: const Icon(Icons.badge),
+            icon: const Icon(Icons.add_chart_rounded),
             title: const Text('CIE'),
             activeColor: Colors.green,
             inactiveColor: Colors.blue,
@@ -131,7 +131,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 .collection('participants');
 
       }*/
-      global.USN = prefs.getString('USN') ?? 'Unknown';
+      global.USN = prefs.getString('USN') ?? ' ';
+      global.name = prefs.getString('name') ?? ' ';
       global.count[0]= (prefs.getInt('ele0')) ?? 0;
       global.count[1]= (prefs.getInt('ele1')) ?? 0;
       global.count[2]= (prefs.getInt('ele2')) ?? 0;
@@ -145,7 +146,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
       global.subs= (prefs.getStringList('subs')) ?? ['-','-','-','-','-','-','-','-','-','-'];
 
-      global.dates= (prefs.getStringList('dates') as List<List<String>>) ?? [['-']];
+      global.dates[0]= (prefs.getStringList('dates0')) ?? ['-'];
+      global.dates[1]= (prefs.getStringList('dates1')) ?? ['-'];
+      global.dates[2]= (prefs.getStringList('dates2')) ?? ['-'];
+      global.dates[3]= (prefs.getStringList('dates3')) ?? ['-'];
+      global.dates[4]= (prefs.getStringList('dates4')) ?? ['-'];
+      global.dates[5]= (prefs.getStringList('dates5')) ?? ['-'];
+      global.dates[6]= (prefs.getStringList('dates6')) ?? ['-'];
+      global.dates[7]= (prefs.getStringList('dates7')) ?? ['-'];
+      global.dates[8]= (prefs.getStringList('dates8')) ?? ['-'];
+      global.dates[9]= (prefs.getStringList('dates9')) ?? ['-'];
     });
   }
 

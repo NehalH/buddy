@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String USN = " ";
+String name = " ";
 Color blue= Colors.blue;
 Color white= Colors.white;
 Color green= Colors.green;
@@ -14,5 +15,6 @@ double attRadius= 40;
 late Image tt;
 var count= [0,0,0,0,0,0,0,0,0,0];
 var subs= ['-','-','-','-','-','-','-','-','-','-'];
-late int current;
+int current= 0;
 late List<List<String>> dates;
+late List tempDates;
